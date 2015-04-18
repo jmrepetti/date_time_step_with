@@ -33,7 +33,7 @@ module DateTimeStepWith
 
   module CronMatcherDateMethods
     def self_cron_array
-      %W(00 00 #{self.day} #{self.month} #{self.wday} #{self.year})
+      %W(0 0 #{self.day} #{self.month} #{self.wday} #{self.year})
     end
   end
 
@@ -66,7 +66,7 @@ module DateTimeStepWith
         elsif cr_exp[","]
           CronListMatcher.new(cr_exp) 
         else
-          Regexp.new("#{cr_exp.to_i}")
+          Regexp.new("^#{cr_exp.to_i}$")
         end
       }
       
