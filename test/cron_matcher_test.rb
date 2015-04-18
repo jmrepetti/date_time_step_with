@@ -8,6 +8,82 @@ DateTime.include DateTimeStepWith::CronMatcher
 
 class CronMatcherTest < Minitest::Test
 
+  def test_match_dates
+    date = Date.new(2015,4,1)
+    cr_exp = "* * 1 * * *"
+    assert (date.match_cron? cr_exp), "#{date} should match '#{cr_exp}'"
+    date = Date.new(2015,4,11)    
+    assert !(date.match_cron? cr_exp), "#{date} should not match '#{cr_exp}'"    
+    date = Date.new(2015,4,1)    
+    cr_exp = "* * 01 * * *"    
+    assert (date.match_cron? cr_exp), "#{date} should match '#{cr_exp}'"        
+    date = Date.new(2015,3,15)
+    cr_exp = "00 00 * * * *"    
+    assert (date.match_cron? cr_exp), "#{date} should match '#{cr_exp}'"        
+    date = DateTime.new(2015,3,15)
+    cr_exp = "00 00 * * * *"    
+    assert (date.match_cron? cr_exp), "#{date} should match '#{cr_exp}'"        
+    date = DateTime.new(2015,3,15)
+    cr_exp = "00 00 * 4 * 2015"    
+    assert !(date.match_cron? cr_exp), "#{date} should not match '#{cr_exp}'"        
+  end
+
+  def test_minutes_range
+    date_time = DateTime.new(2015,1,1,12,20)
+    date_time_limit = DateTime.new(2015,1,1,12,35)
+    cr_exp = "20-35 12 * * * 2015"    
+    min_step = 1.0/(24*60)
+    date_time.step(date_time_limit, min_step).each do |d|
+      assert (d.match_cron? cr_exp), "#{d} should match '#{cr_exp}'"
+    end
+    date_time = DateTime.new(2015,1,1,12,19)
+    assert !(date_time.match_cron? cr_exp), "#{date_time} should not match '#{cr_exp}'"    
+    date_time = DateTime.new(2015,1,1,12,36)
+    assert !(date_time.match_cron? cr_exp), "#{date_time} should not match '#{cr_exp}'"    
+  end
+  
+  def test_hours_range
+    date_time = DateTime.new(2015,1,1,12,20)
+    date_time_limit = DateTime.new(2015,1,1,18,35)
+    cr_exp = "* 12-18 * * * 2015"
+    hour_step = 1.0/(24)
+    date_time.step(date_time_limit, hour_step).each do |d|
+      assert (d.match_cron? cr_exp), "#{d} should match '#{cr_exp}'"
+    end
+    date_time = DateTime.new(2015,1,1,11,19)
+    assert !(date_time.match_cron? cr_exp), "#{date_time} should not match '#{cr_exp}'"
+    date_time = DateTime.new(2015,1,1,19,36)
+    assert !(date_time.match_cron? cr_exp), "#{date_time} should not match '#{cr_exp}'"
+  end
+  
+  def test_minutes_list
+    date_time = DateTime.new(2015,1,1,12,21)
+    date_time_limit = DateTime.new(2015,1,1,12,24)
+    cr_exp = "21,22,23,24 12 * * * 2015"    
+    min_step = 1.0/(24*60)
+    date_time.step(date_time_limit, min_step).each do |d|
+      assert (d.match_cron? cr_exp), "#{d} should match '#{cr_exp}'"
+    end
+    date_time = DateTime.new(2015,1,1,12,20)
+    assert !(date_time.match_cron? cr_exp), "#{date_time} should not match '#{cr_exp}'"    
+    date_time = DateTime.new(2015,1,1,12,25)
+    assert !(date_time.match_cron? cr_exp), "#{date_time} should not match '#{cr_exp}'"    
+  end
+
+  def test_hours_list
+    date_time = DateTime.new(2015,1,1,12,20)
+    date_time_limit = DateTime.new(2015,1,1,15,35)
+    cr_exp = "* 12,13,14,15 * * * 2015"
+    hour_step = 1.0/(24)
+    date_time.step(date_time_limit, hour_step).each do |d|
+      assert (d.match_cron? cr_exp), "#{d} should match '#{cr_exp}'"
+    end
+    date_time = DateTime.new(2015,1,1,11,19)
+    assert !(date_time.match_cron? cr_exp), "#{date_time} should not match '#{cr_exp}'"
+    date_time = DateTime.new(2015,1,1,16,36)
+    assert !(date_time.match_cron? cr_exp), "#{date_time} should not match '#{cr_exp}'"
+  end
+  
   def test_every_minute
     (0..59).to_a.each do |minute|
       date_time = DateTime.new(2015,1,1,1,minute)
@@ -16,7 +92,6 @@ class CronMatcherTest < Minitest::Test
       assert (date_time.match_cron? cr_exp), "#{date_time} should match '#{cr_exp}'"
     end  
   end
-  
   
   def test_every_hour
     (0..23).to_a.each do |h|
