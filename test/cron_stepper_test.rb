@@ -15,9 +15,9 @@ class CronStepperTest < Minitest::Test
   def test_mondays_collection
     date = Date.new(2015,4,1)
     date_limit = Date.new(2015,4,30)
-    mondays = [Date.new(2015,4,6),Date.new(2015,4,13),Date.new(2015,4,20),Date.new(2015,4,27)]
-    cron_mondays = date.step_with_cron("* * * * 1 *", date_limit).collect{|e| e}
-    assert_equal mondays, cron_mondays
+    cron_mondays = date.step_with_cron("* * * * 1 *", date_limit) do |d| 
+      assert d.monday?
+    end
   end
   
   def test_days_collection
