@@ -1,7 +1,5 @@
 module DateTimeStepWith
   module CronStepper
-    def step_with_cron(cron_expression, limit,step=1)
-      collection = self.step(limit,step).select{|d| d.match_cron?(cron_expression) }
     def step_with_cron(cron_expression, limit,step=nil, &block)
 
       #if no step given, then iterate on the minimum cron value
@@ -10,12 +8,21 @@ module DateTimeStepWith
       else
         step = 1#one day
       end
+      
+      #Caching
+      if (@step_with_cron_cache == "#{cron_expression} #{limit} #{step}")
+        @step_with_cron_collection ||= self.step(limit,step).select{|d| d.match_cron?(cron_expression) }
+      else
+        @step_with_cron_cache = "#{cron_expression} #{limit} #{step}"
+        @step_with_cron_collection = self.step(limit,step).select{|d| d.match_cron?(cron_expression) }
+      end
+      
       if block_given?
-        collection.each do |d|
+        @step_with_cron_collection.each do |d|
           yield d
         end
       else
-        collection
+        @step_with_cron_collection 
       end
     end
   end
