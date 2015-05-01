@@ -6,7 +6,7 @@ module DateTimeStepWith
       if step.nil? && self.respond_to?(:minute)
         step = (1.to_f/24/60) #one minute
       else
-        step = 1#one day
+        step = step || 1# or one day
       end
       
       #Caching

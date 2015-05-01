@@ -77,4 +77,32 @@ class DateTimeCronStepperTest < Minitest::Test
   end
 
 
+  def test_step_minutes
+    date_time = DateTime.new(2015,4,1,0,3)
+    date_time_limit = DateTime.new(2015,4,1,0,16)
+
+    one_minute_step = (1.to_f/24/60)
+
+    minutes = (3..16).collect {|e| DateTime.new(2015,4,1,0,e) }
+
+    cron_minutes = date_time.step_with_cron("* * * * * *", date_time_limit, one_minute_step)
+
+    assert_equal minutes, cron_minutes
+  end
+  
+  def test_step_hours
+    
+    date_time = DateTime.new(2015,4,1,3,0)
+    date_time_limit = DateTime.new(2015,4,1,16,0)
+
+    one_minute_step = (1.to_f/24)
+
+    hours = (3..16).collect {|e| DateTime.new(2015,4,1,e,0) }
+
+    cron_hours = date_time.step_with_cron("* * * * * *", date_time_limit, one_minute_step)
+
+    assert_equal hours, cron_hours
+  end
+  
+
 end
