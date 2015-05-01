@@ -8,7 +8,7 @@ Gem::Specification.new do |spec|
   spec.version       = DateTimeStepWith::VERSION
   spec.authors       = ["jmrepetti"]
   spec.email         = ["jmrepetti@gmail.com"]
-  spec.summary       = %q{Iterate dates using cron pattern.}
+  spec.summary       = %q{Filter dates collection using cron pattern.}
   spec.homepage      = ""
   spec.license       = "MIT"
 
