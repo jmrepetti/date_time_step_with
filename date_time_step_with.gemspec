@@ -9,7 +9,7 @@ Gem::Specification.new do |spec|
   spec.authors       = ["jmrepetti"]
   spec.email         = ["jmrepetti@gmail.com"]
   spec.summary       = %q{Filter dates collection using cron pattern.}
-  spec.homepage      = ""
+  spec.homepage      = "https://github.com/jmrepetti/date_time_step_with"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files -z`.split("\x0")
