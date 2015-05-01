@@ -28,15 +28,6 @@ class CronStepperTest < Minitest::Test
     assert_equal days, cron_days
   end
 
-  def test_days_collection
-    date = Date.new(2015,4,1)
-    date_limit = Date.new(2015,4,30)
-    days = date.step(date_limit).collect{|e| e}
-    cron_days = date.step_with_cron("00 00 * * * *", date_limit).collect{|e| e}
-    assert_equal days, cron_days
-  end
-
-
   def test_range_collection
     date = Date.new(2015,4,1)
     date_limit = Date.new(2015,6,30)
@@ -66,6 +57,5 @@ class CronStepperTest < Minitest::Test
     cron_days = date.step_with_cron("00 00 12,15 7,8,12 * 2015", date_limit).collect{|e| e}
     assert_equal days.flatten, cron_days
   end
-  
   
 end
