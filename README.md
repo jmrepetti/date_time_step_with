@@ -47,3 +47,4 @@ Filter Ruby Date or DateTime collections using cron pattern.
 
 * Improve performace. Iteration on wide ranges steping in minutes take long.
 * Add ICAL RRULE expression stepper
+* Validate cron expressions
